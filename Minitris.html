@@ -25,10 +25,12 @@
          }
          var gameGrid = [[],[],[],[],[]];
          var keyReady = true;
+         var canvas;
+         var ctx;
 
          function drawBackground() {
-            var canvas = document.getElementById('minitris');
-            var ctx = canvas.getContext('2d');
+            canvas = document.getElementById('minitris');
+            ctx = canvas.getContext('2d');
             canvas.width = 300;
             canvas.height = 480;
             ctx.fillStyle   = '#111';
@@ -36,18 +38,11 @@
             activeBlock.color = blockColors[Math.floor(Math.random() * 6)];
             setInterval(moveBlock,200);
          }
-         function getContext() {
-            var canvas = document.getElementById('minitris');
-            var ctx = canvas.getContext('2d');
-            return ctx;
-         }
          function eraseBlock(x, y) {
-            ctx = getContext();
             ctx.fillStyle = '#111';
             ctx.fillRect((x)*blockSize,(y)*blockSize,blockSize,blockSize);
          }
          function drawBlock(x, y, color) {
-            ctx = getContext();
             ctx.fillStyle = '#ddd';
             ctx.fillRect((x)*blockSize,(y)*blockSize,blockSize,blockSize);
             ctx.fillStyle = color;
@@ -159,7 +154,6 @@
                }
                for (var i = 1; i < matchingBlocks.length; i++) {
                   if (gameGrid[matchingBlocks[i][0]][matchingBlocks[i][1]]) {
-                     console.log(gameGrid[matchingBlocks[i][0]][matchingBlocks[i][1]]);
                      checkBlocks(matchingBlocks[i][0], matchingBlocks[i][1]);
                   }
                }
@@ -184,8 +178,6 @@
          function moveLeft() {
             if (activeBlock.x > 0) {
                if (!gameGrid[activeBlock.x-1][activeBlock.y]) {
-                  var canvas = document.getElementById('minitris');
-                  var ctx = canvas.getContext('2d');
                   eraseBlock(activeBlock.x, activeBlock.y);
                   drawBlock(activeBlock.x-1, activeBlock.y, activeBlock.color);
                   activeBlock.x--;
@@ -195,8 +187,6 @@
          function moveRight() {
             if (activeBlock.x < 4) {
                if (!gameGrid[activeBlock.x+1][activeBlock.y]) {
-                  var canvas = document.getElementById('minitris');
-                  var ctx = canvas.getContext('2d');
                   eraseBlock(activeBlock.x, activeBlock.y);
                   drawBlock(activeBlock.x+1, activeBlock.y, activeBlock.color);
                   activeBlock.x++;
@@ -205,7 +195,6 @@
          }
          $(document).ready(function() {
             $(document).keydown(function(event) {
-               //console.log(event);
                if (keyReady) {
                   switch(event.keyCode) {
                      case 37: moveLeft()
