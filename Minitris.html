@@ -24,9 +24,11 @@
             color: ""
          }
          var gameGrid = [[],[],[],[],[]];
+         var gameSpeed = 200;
          var keyReady = true;
          var canvas;
          var ctx;
+         var dropActive;
 
          function drawBackground() {
             canvas = document.getElementById('minitris');
@@ -36,14 +38,14 @@
             ctx.fillStyle   = '#111';
             ctx.fillRect(0,0,canvas.width,canvas.height);
             activeBlock.color = blockColors[Math.floor(Math.random() * 6)];
-            setInterval(moveBlock,200);
+            dropActive = setInterval(moveBlock,gameSpeed);
          }
          function eraseBlock(x, y) {
             ctx.fillStyle = '#111';
             ctx.fillRect((x)*blockSize,(y)*blockSize,blockSize,blockSize);
          }
          function drawBlock(x, y, color) {
-            ctx.fillStyle = '#ddd';
+            ctx.fillStyle = '#999';
             ctx.fillRect((x)*blockSize,(y)*blockSize,blockSize,blockSize);
             ctx.fillStyle = color;
             ctx.fillRect((x)*blockSize+4,(y)*blockSize+4,blockSize-8,blockSize-8);
@@ -159,14 +161,19 @@
                }
             }
          }
-         function moveBlock() {
+         function moveDown() {
             if ((activeBlock.y < 7) && !gameGrid[activeBlock.x][activeBlock.y+1]) {
                if (activeBlock.y == -1) keyReady = true;
                else eraseBlock(activeBlock.x, activeBlock.y);
                drawBlock(activeBlock.x, activeBlock.y+1, activeBlock.color);
                activeBlock.y++;
+               return true;
             }
-            else {
+            else return false;
+         }
+         function moveBlock() {
+            if (!moveDown()) {
+               console.log("yes");
                keyReady = false;
                gameGrid[activeBlock.x][activeBlock.y] = activeBlock.color;
                checkBlocks(activeBlock.x, activeBlock.y);
@@ -196,10 +203,13 @@
          $(document).ready(function() {
             $(document).keydown(function(event) {
                if (keyReady) {
+                  console.log(event.keyCode);
                   switch(event.keyCode) {
-                     case 37: moveLeft()
+                     case 37: moveLeft();
                        break;
-                     case 39: moveRight()
+                     case 39: moveRight();
+                       break;
+                     case 40: moveDown();
                        break;
                   }
                }
